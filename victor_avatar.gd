@@ -3,11 +3,13 @@ class_name VictorAvatar
 
 ## Victor Avatar - An animated character with real-time lip-sync capabilities
 
-@onready var head: Polygon2D = $Head
-@onready var mouth: Polygon2D = $Mouth
-@onready var left_eye: Polygon2D = $LeftEye
-@onready var right_eye: Polygon2D = $RightEye
 @onready var lip_sync: LipSyncAnalyzer = $LipSyncAnalyzer
+
+# Visual components (created dynamically)
+var head: Polygon2D
+var mouth: Polygon2D
+var left_eye: Polygon2D
+var right_eye: Polygon2D
 
 # Mouth shapes for different visemes
 var mouth_shapes = {
@@ -28,6 +30,12 @@ var mouth_shapes = {
 	]),
 	"mm": PackedVector2Array([  # "mm" - lips together
 		Vector2(-18, 0), Vector2(18, 0), Vector2(15, 3), Vector2(-15, 3)
+	]),
+	"ff": PackedVector2Array([  # "ff" - lips and teeth
+		Vector2(-16, -2), Vector2(16, -2), Vector2(14, 6), Vector2(-14, 6)
+	]),
+	"th": PackedVector2Array([  # "th" - tongue visible
+		Vector2(-18, 0), Vector2(18, 0), Vector2(16, 8), Vector2(-16, 8)
 	]),
 	"ss": PackedVector2Array([  # "ss" - tight
 		Vector2(-20, 0), Vector2(20, 0), Vector2(18, 4), Vector2(-18, 4)

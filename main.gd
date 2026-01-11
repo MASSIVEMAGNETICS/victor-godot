@@ -4,10 +4,11 @@ extends Control
 
 @onready var victor: VictorAvatar = $VictorAvatar
 @onready var status_label: Label = $UI/StatusLabel
-@onready var start_button: Button = $UI/StartButton
-@onready var stop_button: Button = $UI/StopButton
+@onready var start_button: Button = $UI/ButtonContainer/StartButton
+@onready var stop_button: Button = $UI/ButtonContainer/StopButton
 @onready var viseme_label: Label = $UI/VisemeLabel
-@onready var info_label: Label = $UI/InfoLabel
+@ontml:parameter>
+<parameter name="info_label: Label = $UI/InfoLabel
 
 var audio_recording: bool = false
 var playback: AudioStreamPlayer

@@ -92,11 +92,14 @@ func determine_viseme(amplitude: float, stereo_data: PackedVector2Array) -> Vise
 		return Viseme.SILENT
 	
 	# Perform simple frequency analysis
+	# Note: This is a simplified approach using time-domain sample grouping
+	# For accurate frequency analysis, use AudioEffectSpectrumAnalyzer with FFT
 	var low_freq_energy: float = 0.0
 	var mid_freq_energy: float = 0.0
 	var high_freq_energy: float = 0.0
 	
 	# Analyze first part of samples for rough frequency distribution
+	# This groups early vs late samples as a proxy for frequency content
 	var sample_count = min(stereo_data.size(), 64)
 	for i in range(sample_count):
 		var sample = (stereo_data[i].x + stereo_data[i].y) / 2.0
@@ -131,8 +134,8 @@ func determine_viseme(amplitude: float, stereo_data: PackedVector2Array) -> Vise
 	
 	# Mid frequencies with moderate amplitude = "ee" or "oh"
 	if mid_freq_energy > low_freq_energy * 1.2:
-		# Alternate between EE and OH for variation
-		if randi() % 3 == 0:
+		# Use mid_freq_energy threshold to determine EE vs OH
+		if mid_freq_energy > high_freq_energy * 1.5:
 			return Viseme.OH
 		else:
 			return Viseme.EE
