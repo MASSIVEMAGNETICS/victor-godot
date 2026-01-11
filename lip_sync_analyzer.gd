@@ -91,48 +91,52 @@ func determine_viseme(amplitude: float, stereo_data: PackedVector2Array) -> Vise
 	if amplitude < viseme_threshold:
 		return Viseme.SILENT
 	
-	# Perform simple frequency analysis
-	# Note: This is a simplified approach using time-domain sample grouping
+	# Perform simplified time-domain analysis (NOT true frequency analysis)
+	# Note: This is a simplified approach using time-domain sample grouping as a rough proxy
 	# For accurate frequency analysis, use AudioEffectSpectrumAnalyzer with FFT
-	var low_freq_energy: float = 0.0
-	var mid_freq_energy: float = 0.0
-	var high_freq_energy: float = 0.0
+	# This approximation groups early/middle/late samples and treats them as rough indicators
+	# In practice, this creates reasonable variation in mouth shapes for demonstration purposes
+	var low_freq_energy: float = 0.0   # Early samples (proxy)
+	var mid_freq_energy: float = 0.0   # Middle samples (proxy)
+	var high_freq_energy: float = 0.0  # Late samples (proxy)
 	
-	# Analyze first part of samples for rough frequency distribution
-	# This groups early vs late samples as a proxy for frequency content
+	# Analyze first part of samples for rough temporal grouping
+	# This is NOT real frequency analysis - just groups samples by position
+	# It provides enough variation to create different mouth movements for demonstration
 	var sample_count = min(stereo_data.size(), 64)
 	for i in range(sample_count):
 		var sample = (stereo_data[i].x + stereo_data[i].y) / 2.0
 		var sample_squared = sample * sample
 		
-		# Rough frequency band separation
+		# Temporal grouping (not frequency-based, but provides variation)
 		if i < sample_count / 3:
-			low_freq_energy += sample_squared
+			low_freq_energy += sample_squared  # Early samples
 		elif i < 2 * sample_count / 3:
-			mid_freq_energy += sample_squared
+			mid_freq_energy += sample_squared  # Middle samples
 		else:
-			high_freq_energy += sample_squared
+			high_freq_energy += sample_squared  # Late samples
 	
 	# Normalize
 	low_freq_energy /= sample_count / 3.0
 	mid_freq_energy /= sample_count / 3.0
 	high_freq_energy /= sample_count / 3.0
 	
-	# Determine viseme based on frequency distribution and amplitude
+	# Determine viseme based on temporal grouping and amplitude
+	# Note: This uses simplified heuristics, not true phoneme detection
 	var total_energy = low_freq_energy + mid_freq_energy + high_freq_energy
 	
 	if total_energy < 0.0001:
 		return Viseme.SILENT
 	
-	# High amplitude with strong low frequencies = "ah" sound (AA)
+	# High amplitude with strong early samples = wide open mouth (AA)
 	if amplitude > viseme_threshold * 3 and low_freq_energy > mid_freq_energy:
 		return Viseme.AA
 	
-	# High frequencies = sibilants (SS)
+	# Strong late samples = tight mouth shapes (SS)
 	if high_freq_energy > low_freq_energy and high_freq_energy > mid_freq_energy:
 		return Viseme.SS
 	
-	# Mid frequencies with moderate amplitude = "ee" or "oh"
+	# Mid samples dominant = vowel sounds (EE/OH)
 	if mid_freq_energy > low_freq_energy * 1.2:
 		# Use mid_freq_energy threshold to determine EE vs OH
 		if mid_freq_energy > high_freq_energy * 1.5:
