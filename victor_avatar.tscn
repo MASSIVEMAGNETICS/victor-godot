@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://vt5w4yq5jq0m"]
+
+[ext_resource type="Script" path="res://victor_avatar.gd" id="1_82kx1"]
+[ext_resource type="Script" path="res://lip_sync_analyzer.gd" id="2_6d8ku"]
+
+[node name="VictorAvatar" type="Node2D"]
+script = ExtResource("1_82kx1")
+
+[node name="LipSyncAnalyzer" type="Node" parent="."]
+script = ExtResource("2_6d8ku")
