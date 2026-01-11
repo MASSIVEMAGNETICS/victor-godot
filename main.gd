@@ -7,8 +7,7 @@ extends Control
 @onready var start_button: Button = $UI/ButtonContainer/StartButton
 @onready var stop_button: Button = $UI/ButtonContainer/StopButton
 @onready var viseme_label: Label = $UI/VisemeLabel
-@ontml:parameter>
-<parameter name="info_label: Label = $UI/InfoLabel
+@onready var info_label: Label = $UI/InfoLabel
 
 var audio_recording: bool = false
 var playback: AudioStreamPlayer
